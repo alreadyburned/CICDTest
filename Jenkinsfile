@@ -95,9 +95,10 @@ pipeline {
         //     }
         // }
 
+        // XML 결과를 사람이 읽기 쉬운 HTML/CSV로 변환한다.
         stage('Generate Reports') {
             steps {
-                // 수정된 파워쉘 스크립트 실행 (여러 xml을 하나로 병합)
+                // 여러 XML 파일을 하나의 통합 보고서로 생성한다.
                 powershell '.\\gtest_to_html.ps1'
                 powershell '.\\gtest_to_csv.ps1'
             }
@@ -111,13 +112,13 @@ pipeline {
             // 사후 분석을 위해 XML 리포트를 아티팩트로 항상 보관한다.
             archiveArtifacts artifacts: 'build/reports/*.xml, build/reports/*.html, outputs/*.csv', onlyIfSuccessful: false
             
-            // 2. [추가] HTML Publisher(젠킨스 플러그인 설치 필요)를 이용해 이쁜 보고서 탭 생성
+            // HTML Publisher(젠킨스 플러그인 설치 필요)로 빌드 화면에 보고서 탭을 만든다.
             publishHTML([
                 allowMissing: true,              // 파일이 혹시 없어도 빌드를 실패시키지 않음
                 alwaysLinkToLastBuild: true,     // 메인 화면에서 항상 최신 빌드 리포트로 연결
                 keepAll: true,                   // 과거 빌드의 HTML 리포트도 히스토리로 다 남김
                 reportDir: 'build/reports',      // HTML 파일이 생성되는 폴더 경로
-                reportFiles: 'index.html',       // 보여줄 메인 HTML 파일명 (본인 파일명에 맞게 수정)
+                reportFiles: 'Test_Report.html', // gtest_to_html.ps1에서 생성한 메인 HTML 파일
                 reportName: 'GoogleTest Report'  // 젠킨스 좌측 메뉴에 표시될 탭 이름
             ])
 

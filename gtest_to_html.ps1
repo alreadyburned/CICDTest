@@ -6,6 +6,10 @@ if ($xmlFiles.Count -eq 0) {
     exit 1
 }
 
+$totalCount = 0
+$passCount = 0
+$failCount = 0
+
 $html = @"
 <!DOCTYPE html>
 <html>
@@ -32,6 +36,14 @@ $html = @"
 # 발견된 모든 XML 파일을 순회하며 하나의 HTML에 누적
 foreach ($file in $xmlFiles) {
     [xml]$xml = Get-Content $file.FullName
+
+    # 루트가 testsuites 또는 testsuite 인 경우를 모두 지원
+    $suiteNodes = @()
+    if ($xml.testsuites -and $xml.testsuites.testsuite) {
+        $suiteNodes = @($xml.testsuites.testsuite)
+    } elseif ($xml.testsuite) {
+        $suiteNodes = @($xml.testsuite)
+    }
     
     # 어떤 XML 파일에서 나온 결과인지 표시
     $html += "<div class='source-file'>📄 원본 파일: $($file.Name)</div>"
@@ -43,9 +55,11 @@ foreach ($file in $xmlFiles) {
             <th width='15%'>Duration (sec)</th>
         </tr>"
 
-    foreach ($suite in $xml.testsuites.testsuite) {
+    foreach ($suite in $suiteNodes) {
         foreach ($case in $suite.testcase) {
             $status = if ($case.failure) { "FAILED" } else { "PASSED" }
+            $totalCount++
+            if ($status -eq "FAILED") { $failCount++ } else { $passCount++ }
             $html += "<tr>
                 <td>$($suite.name)</td>
                 <td>$($case.name)</td>
@@ -60,6 +74,9 @@ foreach ($file in $xmlFiles) {
     }
     $html += "</table>"
 }
+
+$summary = "<p><strong>Total:</strong> $totalCount / <span class='PASSED'>Passed: $passCount</span> / <span class='FAILED'>Failed: $failCount</span></p>"
+$html = $html -replace "<h2>📊 통합 Google Test 결과 보고서</h2>", "<h2>📊 통합 Google Test 결과 보고서</h2>$summary"
 
 $html += "</body></html>"
 

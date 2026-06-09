@@ -9,7 +9,15 @@ if ($xmlFiles.Count -eq 0) {
 foreach ($file in $xmlFiles) {
     [xml]$xml = Get-Content $file.FullName
 
-    foreach ($suite in $xml.testsuites.testsuite) {
+    # 루트가 testsuites 또는 testsuite 인 경우를 모두 지원
+    $suiteNodes = @()
+    if ($xml.testsuites -and $xml.testsuites.testsuite) {
+        $suiteNodes = @($xml.testsuites.testsuite)
+    } elseif ($xml.testsuite) {
+        $suiteNodes = @($xml.testsuite)
+    }
+
+    foreach ($suite in $suiteNodes) {
         foreach ($case in $suite.testcase) {
             $status = if ($case.failure) { "FAIL" } else { "PASS" }
             $obj = [PSCustomObject]@{
