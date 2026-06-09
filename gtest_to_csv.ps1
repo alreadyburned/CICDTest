@@ -34,6 +34,8 @@ foreach ($file in $xmlFiles) {
 }
 
 if (!(Test-Path "outputs")) { New-Item -ItemType Directory -Path "outputs" | Out-Null }
-# UTF-8 BOM 인코딩으로 엑셀 한글 깨짐 방지
-$results | Export-Csv -Path "outputs/GTest_Excel_Report.csv" -NoTypeInformation -Encoding utf8BOM
+# UTF-8 BOM 인코딩으로 엑셀 한글 깨짐 방지(PS 5.1/7 모두 호환)
+$csvPath = "outputs/GTest_Excel_Report.csv"
+$csvText = $results | ConvertTo-Csv -NoTypeInformation
+[System.IO.File]::WriteAllLines($csvPath, $csvText, [System.Text.UTF8Encoding]::new($true))
 Write-Host "통합 Excel용 CSV 레포트 생성 완료!"
