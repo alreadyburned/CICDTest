@@ -82,7 +82,7 @@ pipeline {
             steps {
                 echo 'Converting XML to Submission-ready HTML via PowerShell...'
                 powershell """
-                    # ⚠️ $xslt 앞에 백슬래시(\)를 붙여 그루비 가로채기를 방지합니다.
+                    # ⚠️ $xslt 앞에 백슬래시를 붙여 그루비 가로채기를 방지합니다.
                     \$xslt = New-Object System.Xml.Xsl.XslCompiledTransform
                     \$xslt.Load('${workspace}\\gtest-report.xsl')
                     
