@@ -67,7 +67,24 @@ pipeline {
             }
         }
     }
-
+    
+    // 🚀 [핵심] 파이썬 없이 윈도우 자체 기능으로 제출용 HTML 보고서 생성
+    stage('Generate Report File') {
+        steps {
+            echo 'Converting XML to Submission-ready HTML via PowerShell...'
+            powershell """
+                # 윈도우 내장 XSLT 컴파일러를 이용해 XML을 HTML로 다이렉트 변환
+                $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+                $xslt.Load('${workspace}\\gtest-form-example.xsl')
+                
+                # 유닛테스트 보고서 변환 -> unit_report.html
+                $xslt.Transform('${workspace}\\build\\reports\\report_unit.xml', '${workspace}\\build\\reports\\unit_report.html')
+                
+                # 통합테스트 보고서 변환 -> integration_report.html
+                $xslt.Transform('${workspace}\\build\\reports\\report_int.xml', '${workspace}\\build\\reports\\integration_report.html')
+            """
+        }
+    }
     post {
         always {
             // 테스트 실패 여부와 무관하게 XML 리포트를 수집해 Jenkins 테스트 리포트로 표시한다.
