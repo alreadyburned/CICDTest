@@ -102,6 +102,16 @@ pipeline {
                 reportFiles: 'index.html',       // 보여줄 메인 HTML 파일명 (본인 파일명에 맞게 수정)
                 reportName: 'GoogleTest Report'  // 젠킨스 좌측 메뉴에 표시될 탭 이름
             ])
+
+
+
+            // xUnit 플러그인을 호출하여 구글테스트 결과 XML 파싱
+            xunit tools: [GoogleTest(
+                pattern: 'build/reports/**/*.xml', // 결과 파일 경로
+                deleteOutputFiles: true,             // 변환 후 임시 파일 삭제 여부
+                failIfNotExists: true,               // 파일 없으면 빌드 실패 처리
+                skipNoTestFiles: false
+            )]
         }
     }
 }
