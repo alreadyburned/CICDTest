@@ -63,6 +63,6 @@ foreach ($file in $xmlFiles) {
 
 $html += "</body></html>"
 
-if (!(Test-Path "outputs")) { New-Item -ItemType Directory -Path "outputs" | Out-Null }
-Set-Content -Path "outputs/Test_Report.html" -Value $html -Encoding UTF8
+if (!(Test-Path "build/reports")) { New-Item -ItemType Directory -Path "build/reports" | Out-Null }
+Set-Content -Path "build/reports/Test_Report.html" -Value $html -Encoding UTF8
 Write-Host "통합 HTML 레포트 생성 완료!"

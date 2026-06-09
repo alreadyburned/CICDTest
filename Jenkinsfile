@@ -109,7 +109,7 @@ pipeline {
             // 테스트 실패 여부와 무관하게 XML 리포트를 수집해 Jenkins 테스트 리포트로 표시한다.
             junit allowEmptyResults: true, testResults: 'build/reports/*.xml'
             // 사후 분석을 위해 XML 리포트를 아티팩트로 항상 보관한다.
-            archiveArtifacts artifacts: 'build/reports/*.xml, outputs/*.html, outputs/*.csv', onlyIfSuccessful: false
+            archiveArtifacts artifacts: 'build/reports/*.xml, build/reports/*.html, outputs/*.csv', onlyIfSuccessful: false
             
             // 2. [추가] HTML Publisher(젠킨스 플러그인 설치 필요)를 이용해 이쁜 보고서 탭 생성
             publishHTML([
