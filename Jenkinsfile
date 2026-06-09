@@ -1,6 +1,15 @@
 pipeline {
     // 사용 가능한 Jenkins 에이전트에서 실행한다.
     agent any
+    // 윈도우 mingw(winlibs) 환경변수 경로 명시. -- PATH(사용자) 에 등록했더니 인식 안됬음. 시스템 PATH에 등록하면 인식 될 걸로 예상됨.
+    environment {
+        // ⚠️ 본인의 실제 winlibs 내부 bin 폴더 절대 경로로 수정하세요!
+        // 백슬래시(\)는 반드시 두 번씩(\\) 적어야 문법 에러가 안 납니다.
+        WINLIBS_PATH = 'C:\\BuildTools\\winlibs-x86_64-mcf-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5\\mingw64\\bin' 
+        
+        // 기존 젠킨스 PATH 맨 앞에 WinLibs 경로를 강제로 끼워 넣습니다.
+        PATH = "${WINLIBS_PATH};${env.PATH}"
+    }
 
     stages {
         // CMake 구성 단계: 빌드 시스템 파일을 생성한다.
@@ -11,7 +20,7 @@ pipeline {
                     if (isUnix()) {
                         sh 'cmake -S . -B build -DCMAKE_BUILD_TYPE=Release'
                     } else {
-                        bat 'cmake -S . -B build -DCMAKE_BUILD_TYPE=Release'
+                        bat "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G \"MinGW Makefiles\""
                     }
                 }
             }
