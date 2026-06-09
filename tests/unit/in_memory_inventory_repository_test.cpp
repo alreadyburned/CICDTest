@@ -14,14 +14,14 @@ TEST(UnitInventoryRepositoryTest, ReserveReducesStock) {
 }
 
 
-TEST(UnitInventoryRepositoryTest_FailureExample, ReserveReducesStock) {
-    // 의도: 테스트 실패 예시. (항상 실패하게 되어 있음.)
-    cicd::InMemoryInventoryRepository repo;
-    repo.setStock("A100", 5);
+// TEST(UnitInventoryRepositoryTest_FailureExample, ReserveReducesStock) {
+//     // 의도: 테스트 실패 예시. (항상 실패하게 되어 있음.)
+//     cicd::InMemoryInventoryRepository repo;
+//     repo.setStock("A100", 5);
 
-    EXPECT_TRUE(repo.reserve("A100", 100));
-    EXPECT_EQ(repo.available("A100"), 2);
-}
+//     EXPECT_TRUE(repo.reserve("A100", 100));
+//     EXPECT_EQ(repo.available("A100"), 2);
+// }
 
 
 TEST(UnitInventoryRepositoryTest, ReserveFailsWhenInsufficient) {
