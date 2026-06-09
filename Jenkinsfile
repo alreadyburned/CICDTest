@@ -82,15 +82,15 @@ pipeline {
             steps {
                 echo 'Converting XML to Submission-ready HTML via PowerShell...'
                 powershell """
-                    # 윈도우 내장 XSLT 컴파일러를 이용해 XML을 HTML로 다이렉트 변환
-                    $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
-                    $xslt.Load('${workspace}\\gtest-report.xsl')
+                    # ⚠️ $xslt 앞에 백슬래시(\)를 붙여 그루비 가로채기를 방지합니다.
+                    \$xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+                    \$xslt.Load('${workspace}\\gtest-report.xsl')
                     
-                    # 유닛테스트 보고서 변환 -> unit_report.html
-                    $xslt.Transform('${workspace}\\build\\reports\\report_unit.xml', '${workspace}\\build\\reports\\unit_report.html')
+                    # 유닛테스트 보고서 변환
+                    \$xslt.Transform('${workspace}\\build\\reports\\report_unit.xml', '${workspace}\\build\\reports\\unit_report.html')
                     
-                    # 통합테스트 보고서 변환 -> integration_report.html
-                    $xslt.Transform('${workspace}\\build\\reports\\report_int.xml', '${workspace}\\build\\reports\\integration_report.html')
+                    # 통합테스트 보고서 변환
+                    \$xslt.Transform('${workspace}\\build\\reports\\report_int.xml', '${workspace}\\build\\reports\\integration_report.html')
                 """
             }
         }
