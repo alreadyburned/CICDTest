@@ -74,6 +74,16 @@ pipeline {
             junit allowEmptyResults: true, testResults: 'build/reports/*.xml'
             // 사후 분석을 위해 XML 리포트를 아티팩트로 항상 보관한다.
             archiveArtifacts artifacts: 'build/reports/*.xml', onlyIfSuccessful: false
+
+            // 2. [추가] HTML Publisher(젠킨스 플러그인 설치 필요)를 이용해 이쁜 보고서 탭 생성
+            publishHTML([
+                allowMissing: true,              // 파일이 혹시 없어도 빌드를 실패시키지 않음
+                alwaysLinkToLastBuild: true,     // 메인 화면에서 항상 최신 빌드 리포트로 연결
+                keepAll: true,                   // 과거 빌드의 HTML 리포트도 히스토리로 다 남김
+                reportDir: 'build/reports',      // HTML 파일이 생성되는 폴더 경로
+                reportFiles: 'index.html',       // 보여줄 메인 HTML 파일명 (본인 파일명에 맞게 수정)
+                reportName: 'GoogleTest Report'  // 젠킨스 좌측 메뉴에 표시될 탭 이름
+            ])
         }
     }
 }
