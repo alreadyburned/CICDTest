@@ -109,7 +109,6 @@ pipeline {
             xunit tools: [GoogleTest(
                 pattern: 'build/reports/**/*.xml', // 결과 파일 경로
                 deleteOutputFiles: true,             // 변환 후 임시 파일 삭제 여부
-                failIfNotExists: true,               // 파일 없으면 빌드 실패 처리
                 skipNoTestFiles: false
             )]
         }
