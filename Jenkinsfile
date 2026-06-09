@@ -78,22 +78,22 @@ pipeline {
         }
         
          // 🚀 [핵심] 파이썬 없이 윈도우 자체 기능으로 제출용 HTML 보고서 생성
-        stage('Generate Report File') {
-            steps {
-                echo 'Converting XML to Submission-ready HTML via PowerShell...'
-                powershell """
-                    # ⚠️ $xslt 앞에 백슬래시를 붙여 그루비 가로채기를 방지합니다.
-                    \$xslt = New-Object System.Xml.Xsl.XslCompiledTransform
-                    \$xslt.Load('${workspace}\\gtest-report.xsl')
+        // stage('Generate Report File') {
+        //     steps {
+        //         echo 'Converting XML to Submission-ready HTML via PowerShell...'
+        //         powershell """
+        //             # ⚠️ $xslt 앞에 백슬래시를 붙여 그루비 가로채기를 방지합니다.
+        //             \$xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+        //             \$xslt.Load('${workspace}\\gtest-report.xsl')
                     
-                    # 유닛테스트 보고서 변환
-                    \$xslt.Transform('${workspace}\\build\\reports\\report_unit.xml', '${workspace}\\build\\reports\\unit_report.html')
+        //             # 유닛테스트 보고서 변환
+        //             \$xslt.Transform('${workspace}\\build\\reports\\report_unit.xml', '${workspace}\\build\\reports\\unit_report.html')
                     
-                    # 통합테스트 보고서 변환
-                    \$xslt.Transform('${workspace}\\build\\reports\\report_int.xml', '${workspace}\\build\\reports\\integration_report.html')
-                """
-            }
-        }
+        //             # 통합테스트 보고서 변환
+        //             \$xslt.Transform('${workspace}\\build\\reports\\report_int.xml', '${workspace}\\build\\reports\\integration_report.html')
+        //         """
+        //     }
+        // }
 
         stage('Generate Reports') {
             steps {
